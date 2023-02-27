@@ -8,7 +8,8 @@ const getPhoneData = (searchHere) => {
 const getDataFromApi = (data) => {
   let mainContainer = document.getElementById("main-container");
   mainContainer.innerText = "";
-
+  //stop spinner function
+  toggleSpinners(false);
   data = data.slice(0, 10);
   let noFound = document.getElementById("no-found");
   if (data.length === 0) {
@@ -37,7 +38,22 @@ const getDataFromApi = (data) => {
   });
 };
 
+//search function
+
 const searchButton = () => {
   const getTheValue = document.getElementById("input-value").value;
   getPhoneData(getTheValue);
+  //start spinner functions
+  toggleSpinners(true);
+};
+
+//spinners functions
+
+const toggleSpinners = (isLoading) => {
+  let loadSpinners = document.getElementById("spinners");
+  if (isLoading) {
+    loadSpinners.classList.remove("d-none");
+  } else {
+    loadSpinners.classList.add("d-none");
+  }
 };
