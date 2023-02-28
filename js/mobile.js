@@ -36,7 +36,7 @@ const getDataFromApi = (data, dataLimit) => {
         <h4 class="card-title">${detail.brand}</h4>
         <h5 class="card-title">${detail.phone_name}</h5>
         <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-        <button class= "btn btn-primary">Details</button>
+        <button onclick = "loadPhoneDetails('${detail.slug}')" data-bs-toggle="modal" data-bs-target="#phone-details" class= "btn btn-primary">Phone Details</button>
       </div>
     </div>
   </div>
@@ -47,9 +47,16 @@ const getDataFromApi = (data, dataLimit) => {
   });
 };
 
+document.getElementById("input-value").addEventListener("keypress", (e) => {
+  if (e.key === "Enter") {
+    processSearch(10);
+  }
+});
+
 const processSearch = (dataLimit) => {
   toggleSpinners(true);
   const getTheValue = document.getElementById("input-value").value;
+
   getPhoneData(getTheValue, dataLimit);
   //start spinner functions
 };
@@ -75,3 +82,27 @@ const toggleSpinners = (isLoading) => {
 document.getElementById("btn-show-all").addEventListener("click", function () {
   processSearch();
 });
+
+//Load Function
+
+const loadPhoneDetails = async (id) => {
+  const url = `https://openapi.programming-hero.com/api/phone/${id}`;
+  const res = await fetch(url);
+  const data = await res.json();
+  displayPhoneDetails(data.data);
+};
+
+const displayPhoneDetails = (phone) => {
+  let getIdHtml = document.getElementById("exampleModalLabel");
+  getIdHtml.innerText = phone.name;
+  let phoneBody = document.getElementById("phone-body");
+  phoneBody.innerHTML = `
+  <p>Stroage : ${phone.mainFeatures.memory}</p>
+  <p>Relase Date : ${
+    phone.releaseDate ? phone.releaseDate : "No Release Date"
+  }</p>
+  <img class="w-50 mx-auto" src = "${phone.image}"/>
+  <p>Sensors : ${phone.mainFeatures.sensors[0]}</p>
+  `;
+};
+getPhoneData("apple");
